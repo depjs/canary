@@ -44,12 +44,22 @@ const cell = (r, key) => {
 }
 
 const header = ['fixture', 'cache', 'lockfile', ...PMS.map(pm => versionOf(pm) ? `${pm} ${versionOf(pm)}` : pm)]
-const rows = fixtures.flatMap(f => SCENARIOS.map((s, i) => [
-  i === 0 ? f : '',
-  s.cache,
-  s.lockfile,
-  ...PMS.map(pm => cell(byKey.get(`${pm}/${f}`), s.key))
-]))
+const rows = fixtures.flatMap(f => SCENARIOS.map((s, i) => {
+  const cells = PMS.map(pm => {
+    const r = byKey.get(`${pm}/${f}`)
+    return { text: cell(r, s.key), ms: r?.ok ? r.ms?.[s.key] ?? null : null }
+  })
+  const fastest = Math.min(...cells.filter(c => c.ms != null).map(c => c.ms))
+  // Bold by displayed value, not raw ms — two cells rounding to the same
+  // 0.1s should either both be bold or neither.
+  const fastestText = Number.isFinite(fastest) ? `${(fastest / 1000).toFixed(1)}s` : null
+  return [
+    i === 0 ? f : '',
+    s.cache,
+    s.lockfile,
+    ...cells.map(c => c.ms != null && c.text === fastestText ? `**${c.text}**` : c.text)
+  ]
+}))
 
 const table = [
   `| ${header.join(' | ')} |`,
@@ -67,7 +77,7 @@ const runNote = reps > 1
   ? `median of ${reps} runs each`
   : 'single run each — indicative, not a benchmark'
 const body = 'Install time per scenario — {cold, warm} cache × {without, with} lockfile ' +
-  `(${runNote}). dep keeps no cache by design, ` +
+  `(${runNote}, fastest per row in **bold**). dep keeps no cache by design, ` +
   'so its warm and cold times measure the same work.' +
   `\n\n${table}\n\n${stampLine}`
 
