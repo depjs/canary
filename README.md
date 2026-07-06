@@ -20,10 +20,19 @@ them with the committed [`versions.json`](versions.json). When any of the four
 has a new release, the full matrix runs: {npm, pnpm, yarn, dep} × {react,
 next, express, vite, jest}.
 
-Each cell is a fresh, cold-cache, lockfile-free install (fixtures pin nothing:
-all dependencies are `"*"`, so the newest publish of each library is exercised
-too), followed by a smoke test that actually loads the installed package and,
-where it has one, runs its bin.
+Each cell measures four installs of the same fixture — every combination of
+{cold, warm} cache × {without, with} lockfile:
+
+1. **cold cache, no lockfile** — a from-scratch install that also generates
+   the lockfile and warms the cache for the following runs (fixtures pin
+   nothing: all dependencies are `"*"`, so the newest publish of each library
+   is exercised too)
+2. **warm cache, lockfile** — the CI-like fast path
+3. **cold cache, lockfile** — resolution skipped, downloads still needed
+4. **warm cache, no lockfile** — resolution needed, downloads cached
+
+followed by a smoke test that actually loads the installed package and, where
+it has one, runs its bin.
 
 After every matrix run, the `publish` job rewrites the
 [Latest results](#latest-results) table above with a bot commit — the front
@@ -65,8 +74,12 @@ as CI does.
 
 - Yarn runs with `nodeLinker: node-modules` so all four produce the same
   layout and the same smoke test applies.
-- Timings are a single cold run each — indicative, not a benchmark. See dep's
-  [benchmark](https://github.com/depjs/dep#benchmark) for proper numbers.
+- Timings are a single run per scenario — indicative, not a benchmark. See
+  dep's [benchmark](https://github.com/depjs/dep#benchmark) for proper
+  numbers.
+- dep keeps no cache by design, so its warm and cold numbers measure the same
+  work. Its lockfile runs use the npm-compatible `package-lock.json` written
+  by `dep lock` (install alone never writes one).
 
 ## License
 

@@ -26,16 +26,30 @@ if (results.length === 0) {
 }
 
 const PMS = ['npm', 'pnpm', 'yarn', 'dep']
+const SCENARIOS = [
+  { key: 'cold_nolock', cache: 'cold', lockfile: 'no' },
+  { key: 'cold_lock', cache: 'cold', lockfile: 'yes' },
+  { key: 'warm_nolock', cache: 'warm', lockfile: 'no' },
+  { key: 'warm_lock', cache: 'warm', lockfile: 'yes' }
+]
 const fixtures = [...new Set(results.map(r => r.fixture))].sort()
 const byKey = new Map(results.map(r => [`${r.pm}/${r.fixture}`, r]))
 const versionOf = pm => results.find(r => r.pm === pm)?.version
 
-const header = ['fixture', ...PMS.map(pm => versionOf(pm) ? `${pm} ${versionOf(pm)}` : pm)]
-const rows = fixtures.map(f => [f, ...PMS.map(pm => {
-  const r = byKey.get(`${pm}/${f}`)
+const cell = (r, key) => {
   if (!r) return '—'
-  return r.ok ? `${(r.ms / 1000).toFixed(1)}s` : '❌ failed'
-})])
+  if (!r.ok) return '❌ failed'
+  const v = r.ms?.[key]
+  return v == null ? '—' : `${(v / 1000).toFixed(1)}s`
+}
+
+const header = ['fixture', 'cache', 'lockfile', ...PMS.map(pm => versionOf(pm) ? `${pm} ${versionOf(pm)}` : pm)]
+const rows = fixtures.flatMap(f => SCENARIOS.map((s, i) => [
+  i === 0 ? f : '',
+  s.cache,
+  s.lockfile,
+  ...PMS.map(pm => cell(byKey.get(`${pm}/${f}`), s.key))
+]))
 
 const table = [
   `| ${header.join(' | ')} |`,
@@ -48,7 +62,10 @@ const runUrl = process.env.GITHUB_RUN_ID
   ? `${process.env.GITHUB_SERVER_URL}/${process.env.GITHUB_REPOSITORY}/actions/runs/${process.env.GITHUB_RUN_ID}`
   : null
 const stampLine = runUrl ? `Last run: [${stamp}](${runUrl})` : `Last run: ${stamp}`
-const body = `Cold-cache install time (single run — indicative, not a benchmark).\n\n${table}\n\n${stampLine}`
+const body = 'Install time per scenario — {cold, warm} cache × {without, with} lockfile ' +
+  '(single run each — indicative, not a benchmark). dep keeps no cache by design, ' +
+  'so its warm and cold times measure the same work.' +
+  `\n\n${table}\n\n${stampLine}`
 
 const md = `## Canary results\n\n${body}\n`
 console.log(md)
