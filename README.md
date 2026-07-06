@@ -12,28 +12,28 @@ Install time per scenario — {cold, warm} cache × {without, with} lockfile (si
 
 | fixture | cache | lockfile | npm 11.18.0 | pnpm 11.10.0 | yarn 4.17.0 | dep 1.5.4 |
 | --- | --- | --- | --- | --- | --- | --- |
-| express | cold | no | 1.8s | 1.2s | 1.2s | 1.4s |
+| express | cold | no | 1.8s | 1.4s | 3.0s | 1.1s |
 |  | cold | yes | 0.9s | 1.0s | 1.0s | 0.4s |
-|  | warm | no | 1.4s | 0.7s | 0.9s | 0.8s |
-|  | warm | yes | 0.5s | 0.7s | 0.4s | 0.4s |
-| jest | cold | no | 10.4s | 3.6s | 4.1s | 2.4s |
-|  | cold | yes | 3.3s | 4.7s | 2.8s | 1.1s |
-|  | warm | no | 8.3s | 1.5s | 3.0s | 2.3s |
-|  | warm | yes | 2.5s | 0.6s | 1.5s | 1.1s |
-| next | cold | no | 10.7s | 3.6s | 7.5s | 4.4s |
-|  | cold | yes | 7.1s | 2.7s | 5.3s | 2.5s |
-|  | warm | no | 9.9s | 1.7s | 4.4s | 4.6s |
-|  | warm | yes | 6.4s | 1.0s | 2.8s | 2.6s |
-| react | cold | no | 1.2s | 0.9s | 1.2s | 0.7s |
-|  | cold | yes | 0.5s | 0.7s | 0.7s | 0.3s |
-|  | warm | no | 1.0s | 0.5s | 0.9s | 0.6s |
-|  | warm | yes | 0.4s | 0.5s | 0.4s | 0.3s |
-| vite | cold | no | 4.7s | 1.9s | 3.5s | 1.4s |
-|  | cold | yes | 0.9s | 1.2s | 1.5s | 0.5s |
-|  | warm | no | 3.9s | 1.0s | 3.0s | 1.2s |
-|  | warm | yes | 0.6s | 0.6s | 0.6s | 0.5s |
+|  | warm | no | 1.4s | 0.7s | 0.9s | 0.9s |
+|  | warm | yes | 0.6s | 0.7s | 0.5s | 0.4s |
+| jest | cold | no | 12.1s | 3.6s | 4.8s | 3.3s |
+|  | cold | yes | 2.9s | 1.9s | 3.5s | 1.3s |
+|  | warm | no | 11.4s | 2.1s | 3.3s | 2.8s |
+|  | warm | yes | 1.9s | 1.2s | 1.7s | 1.4s |
+| next | cold | no | 10.4s | 3.6s | 7.5s | 4.3s |
+|  | cold | yes | 6.3s | 2.7s | 5.4s | 2.7s |
+|  | warm | no | 9.1s | 1.8s | 4.6s | 3.9s |
+|  | warm | yes | 5.4s | 1.1s | 2.9s | 2.6s |
+| react | cold | no | 1.2s | 1.1s | 1.3s | 0.7s |
+|  | cold | yes | 0.5s | 0.8s | 0.6s | 0.3s |
+|  | warm | no | 1.0s | 0.7s | 1.0s | 0.5s |
+|  | warm | yes | 0.4s | 0.6s | 0.3s | 0.3s |
+| vite | cold | no | 4.7s | 1.8s | 3.7s | 1.2s |
+|  | cold | yes | 0.9s | 1.2s | 1.2s | 0.5s |
+|  | warm | no | 4.9s | 1.0s | 2.7s | 1.2s |
+|  | warm | yes | 0.6s | 0.6s | 0.5s | 0.5s |
 
-Last run: [2026-07-06 15:44:04 UTC](https://github.com/depjs/canary/actions/runs/28803974900)
+Last run: [2026-07-06 16:09:00 UTC](https://github.com/depjs/canary/actions/runs/28805592317)
 
 <!-- results:end -->
 
