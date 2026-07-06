@@ -45,11 +45,13 @@ them with the committed [`versions.json`](versions.json). When any of the four
 has a new release, the full matrix runs: {npm, pnpm, yarn, dep} × {react,
 next, express, vite, jest}.
 
-Each cell measures four installs of the same fixture — every combination of
-{cold, warm} cache × {without, with} lockfile:
+Each cell measures four scenarios of the same fixture — every combination of
+{cold, warm} cache × {without, with} lockfile. Each scenario is installed 5
+times (override with `REPS`) and the median is reported, so one slow network
+round-trip or a noisy runner neighbour cannot skew a published number:
 
 1. **cold cache, no lockfile** — a from-scratch install that also generates
-   the lockfile and warms the cache for the following runs (fixtures pin
+   the lockfile and warms the cache for the following scenarios (fixtures pin
    nothing: all dependencies are `"*"`, so the newest publish of each library
    is exercised too)
 2. **warm cache, lockfile** — the CI-like fast path
@@ -99,7 +101,8 @@ as CI does.
 
 - Yarn runs with `nodeLinker: node-modules` so all four produce the same
   layout and the same smoke test applies.
-- Timings are a single run per scenario — indicative, not a benchmark. See
+- Timings are the median of 5 runs per scenario on shared CI runners —
+  stable against outliers, but still indicative rather than a benchmark. See
   dep's [benchmark](https://github.com/depjs/dep#benchmark) for proper
   numbers.
 - dep keeps no cache by design, so its warm and cold numbers measure the same

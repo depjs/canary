@@ -62,8 +62,12 @@ const runUrl = process.env.GITHUB_RUN_ID
   ? `${process.env.GITHUB_SERVER_URL}/${process.env.GITHUB_REPOSITORY}/actions/runs/${process.env.GITHUB_RUN_ID}`
   : null
 const stampLine = runUrl ? `Last run: [${stamp}](${runUrl})` : `Last run: ${stamp}`
+const reps = results.find(r => r.reps)?.reps ?? 1
+const runNote = reps > 1
+  ? `median of ${reps} runs each`
+  : 'single run each — indicative, not a benchmark'
 const body = 'Install time per scenario — {cold, warm} cache × {without, with} lockfile ' +
-  '(single run each — indicative, not a benchmark). dep keeps no cache by design, ' +
+  `(${runNote}). dep keeps no cache by design, ` +
   'so its warm and cold times measure the same work.' +
   `\n\n${table}\n\n${stampLine}`
 
