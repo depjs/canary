@@ -1,0 +1,10 @@
+{
+  "name": "canary-next",
+  "version": "1.0.0",
+  "private": true,
+  "dependencies": {
+    "next": "*",
+    "react": "*",
+    "react-dom": "*"
+  }
+}

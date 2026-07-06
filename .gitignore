@@ -1,0 +1,6 @@
+node_modules/
+fixtures/*/package-lock.json
+fixtures/*/yarn.lock
+fixtures/*/pnpm-lock.yaml
+fixtures/*/.yarn/
+fixtures/*/.pnp.*
