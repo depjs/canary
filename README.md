@@ -102,9 +102,9 @@ as CI does.
 - Yarn runs with `nodeLinker: node-modules` so all four produce the same
   layout and the same smoke test applies.
 - Timings are the median of 5 runs per scenario on shared CI runners —
-  stable against outliers, but still indicative rather than a benchmark. See
-  dep's [benchmark](https://github.com/depjs/dep#benchmark) for proper
-  numbers.
+  stable against outliers, but absolute numbers still vary with the runner
+  and the network. Compare the tools within a row rather than numbers across
+  runs.
 - dep keeps no cache by design, so its warm and cold numbers measure the same
   work. Its lockfile runs use the npm-compatible `package-lock.json` written
   by `dep lock` (install alone never writes one).
