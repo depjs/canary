@@ -86,12 +86,16 @@ jobs:
           path: ${{ runner.temp }}/result.json
           if-no-files-found: ignore
 
-  # Render the fixtures × package-managers comparison table into the job
-  # summary, including any failures.
-  report:
+  # Render the comparison table into the job summary AND into the README's
+  # "Latest results" section, then commit. The same commit advances
+  # versions.json — but only when the whole matrix passed, so a failing
+  # release keeps getting retried (and keeps failing loudly) until fixed.
+  publish:
     needs: [check, canary]
     if: ${{ !cancelled() && needs.canary.result != 'skipped' }}
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -101,32 +105,23 @@ jobs:
         with:
           pattern: result-*
           path: results
-      - run: node scripts/report.mjs results
-
-  # Record the newly seen versions so the next scheduled poll is quiet again.
-  # Only advances when the whole matrix passed, so a failing release keeps
-  # getting retried (and keeps failing loudly) until it is fixed or yanked.
-  update-state:
-    needs: [check, canary]
-    if: ${{ !cancelled() && needs.check.outputs.changed == 'true' && needs.canary.result == 'success' }}
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/download-artifact@v4
+      - name: Update README with latest results
+        run: node scripts/report.mjs results --readme
+      - name: Fetch new versions.json
+        if: needs.check.outputs.changed == 'true' && needs.canary.result == 'success'
+        uses: actions/download-artifact@v4
         with:
           name: versions
-      - name: Commit updated versions.json
+      - name: Commit results
         env:
           CHANGES: ${{ needs.check.outputs.changes }}
         run: |
-          if git diff --quiet -- versions.json; then
-            echo "versions.json unchanged"
+          git add README.md versions.json
+          if git diff --cached --quiet; then
+            echo "nothing to publish"
             exit 0
           fi
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add versions.json
-          git commit -m "chore: record new releases ($CHANGES)"
+          git commit -m "chore: update canary results${CHANGES:+ ($CHANGES)}"
           git push

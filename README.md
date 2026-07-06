@@ -4,29 +4,33 @@ Continuously verifies that [dep](https://github.com/depjs/dep) installs
 representative real-world packages — react, next, express, vite, jest — and
 compares it side by side with npm, pnpm, and yarn.
 
+## Latest results
+
+<!-- results:start -->
+
+_No results yet — the first workflow run will fill this in._
+
+<!-- results:end -->
+
 ## How it works
 
 Every 2 hours, the `check` job polls the npm registry for the latest versions
 of `npm`, `pnpm`, `@yarnpkg/cli-dist` (yarn berry), and `dep`, and compares
 them with the committed [`versions.json`](versions.json). When any of the four
-has a new release, the full matrix runs:
-
-|            | react | next | express | vite | jest |
-| ---------- | ----- | ---- | ------- | ---- | ---- |
-| **npm**    | ✅     | ✅    | ✅       | ✅    | ✅    |
-| **pnpm**   | ✅     | ✅    | ✅       | ✅    | ✅    |
-| **yarn**   | ✅     | ✅    | ✅       | ✅    | ✅    |
-| **dep**    | ✅     | ✅    | ✅       | ✅    | ✅    |
+has a new release, the full matrix runs: {npm, pnpm, yarn, dep} × {react,
+next, express, vite, jest}.
 
 Each cell is a fresh, cold-cache, lockfile-free install (fixtures pin nothing:
 all dependencies are `"*"`, so the newest publish of each library is exercised
 too), followed by a smoke test that actually loads the installed package and,
-where it has one, runs its bin. Install times are collected into a comparison
-table in the workflow run's job summary.
+where it has one, runs its bin.
 
-After a fully green run, `versions.json` is advanced by a bot commit so the
-next poll is quiet. A failing release is retried (and keeps failing loudly) on
-every poll until it is fixed.
+After every matrix run, the `publish` job rewrites the
+[Latest results](#latest-results) table above with a bot commit — the front
+page always shows the most recent run, including failures. When the run was
+fully green, the same commit advances `versions.json` so the next poll is
+quiet; a failing release is retried (and keeps failing loudly) on every poll
+until it is fixed.
 
 dep itself is installed with [`depjs/setup-depjs`](https://github.com/depjs/setup-depjs).
 
@@ -53,6 +57,9 @@ dep itself is installed with [`depjs/setup-depjs`](https://github.com/depjs/setu
 $ RESULT_FILE=/tmp/result.json bash scripts/canary.sh dep react
 $ node scripts/report.mjs /tmp
 ```
+
+Add `--readme` to also rewrite the [Latest results](#latest-results) section,
+as CI does.
 
 ## Notes
 
