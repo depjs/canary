@@ -39,7 +39,9 @@ clean() { # clean [--lockfile] — always removes node_modules
 install_once() {
   case "$pm" in
     npm)  npm install --no-audit --no-fund ;;
-    pnpm) pnpm install --store-dir "$RUNNER_TEMP/pnpm-store" ;;
+    # --dangerously-allow-all-builds: npm, yarn and dep run build scripts by
+    # default; without it pnpm >= 11 hard-fails on unapproved ones (sharp).
+    pnpm) pnpm install --store-dir "$RUNNER_TEMP/pnpm-store" --dangerously-allow-all-builds ;;
     yarn) yarn install ;;
     dep)  dep install ;;
     *) echo "unknown package manager: $pm" >&2; exit 1 ;;
