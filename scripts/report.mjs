@@ -43,6 +43,10 @@ const cell = (r, key) => {
   return v == null ? '—' : `${(v / 1000).toFixed(1)}s`
 }
 
+// GitHub strips style attributes from README HTML, so inline LaTeX math is
+// the only way to color text; it renders via <math-renderer> on github.com.
+const green = text => `\${\\color{green}\\textsf{${text}}}\$`
+
 const header = ['fixture', 'cache', 'lockfile', ...PMS.map(pm => versionOf(pm) ? `${pm} ${versionOf(pm)}` : pm)]
 const rows = fixtures.flatMap(f => SCENARIOS.map((s, i) => {
   const cells = PMS.map(pm => {
@@ -50,14 +54,14 @@ const rows = fixtures.flatMap(f => SCENARIOS.map((s, i) => {
     return { text: cell(r, s.key), ms: r?.ok ? r.ms?.[s.key] ?? null : null }
   })
   const fastest = Math.min(...cells.filter(c => c.ms != null).map(c => c.ms))
-  // Bold by displayed value, not raw ms — two cells rounding to the same
-  // 0.1s should either both be bold or neither.
+  // Highlight by displayed value, not raw ms — two cells rounding to the
+  // same 0.1s should either both be highlighted or neither.
   const fastestText = Number.isFinite(fastest) ? `${(fastest / 1000).toFixed(1)}s` : null
   return [
     i === 0 ? f : '',
     s.cache,
     s.lockfile,
-    ...cells.map(c => c.ms != null && c.text === fastestText ? `**${c.text}**` : c.text)
+    ...cells.map(c => c.ms != null && c.text === fastestText ? green(c.text) : c.text)
   ]
 }))
 
@@ -77,7 +81,7 @@ const runNote = reps > 1
   ? `median of ${reps} runs each`
   : 'single run each — indicative, not a benchmark'
 const body = 'Install time per scenario — {cold, warm} cache × {without, with} lockfile ' +
-  `(${runNote}, fastest per row in **bold**). dep keeps no cache by design, ` +
+  `(${runNote}, fastest per row in ${green('green')}). dep keeps no cache by design, ` +
   'so its warm and cold times measure the same work.' +
   `\n\n${table}\n\n${stampLine}`
 
