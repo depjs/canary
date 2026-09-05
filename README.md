@@ -10,30 +10,30 @@ compares it side by side with npm, pnpm, and yarn.
 
 Install time per scenario — {cold, warm} cache × {without, with} lockfile (median of 5 runs each, fastest per row in ${\color{green}\textsf{green}}$). dep keeps no cache by design, so its warm and cold times measure the same work.
 
-| fixture | cache | lockfile | npm 12.0.2 | pnpm 11.25.0 | yarn 4.18.0 | dep 1.5.8 |
+| fixture | cache | lockfile | npm 12.0.2 | pnpm 12.3.4 | yarn 4.18.0 | dep 1.5.8 |
 | --- | --- | --- | --- | --- | --- | --- |
-| express | cold | no | 1.7s | 1.1s | 1.5s | ${\color{green}\textsf{0.6s}}$ |
-|  | cold | yes | 0.9s | 1.0s | 1.0s | ${\color{green}\textsf{0.4s}}$ |
-|  | warm | no | 1.0s | 0.7s | 0.9s | ${\color{green}\textsf{0.5s}}$ |
-|  | warm | yes | 0.6s | 0.7s | 0.5s | ${\color{green}\textsf{0.4s}}$ |
-| jest | cold | no | 10.6s | ${\color{green}\textsf{2.7s}}$ | 4.5s | 22.4s |
-|  | cold | yes | 3.1s | ${\color{green}\textsf{1.6s}}$ | 3.0s | 21.3s |
-|  | warm | no | 3.8s | ${\color{green}\textsf{2.1s}}$ | 2.3s | 21.6s |
-|  | warm | yes | 2.1s | ${\color{green}\textsf{1.0s}}$ | 1.6s | 20.9s |
-| next | cold | no | 10.5s | ${\color{green}\textsf{3.4s}}$ | 8.5s | 4.0s |
-|  | cold | yes | 7.4s | 2.6s | 6.8s | ${\color{green}\textsf{1.3s}}$ |
-|  | warm | no | 7.7s | ${\color{green}\textsf{1.8s}}$ | 2.8s | 2.1s |
-|  | warm | yes | 6.6s | ${\color{green}\textsf{1.0s}}$ | 2.5s | 1.3s |
-| react | cold | no | 1.1s | 0.9s | 1.1s | ${\color{green}\textsf{0.8s}}$ |
-|  | cold | yes | 0.4s | 0.8s | 0.6s | ${\color{green}\textsf{0.2s}}$ |
-|  | warm | no | 0.5s | 0.7s | ${\color{green}\textsf{0.4s}}$ | 0.6s |
-|  | warm | yes | ${\color{green}\textsf{0.3s}}$ | 0.6s | ${\color{green}\textsf{0.3s}}$ | ${\color{green}\textsf{0.3s}}$ |
-| vite | cold | no | 5.6s | 1.5s | 2.9s | ${\color{green}\textsf{0.9s}}$ |
-|  | cold | yes | 1.0s | 1.2s | 1.1s | ${\color{green}\textsf{0.4s}}$ |
-|  | warm | no | 1.7s | 0.8s | ${\color{green}\textsf{0.6s}}$ | 0.8s |
-|  | warm | yes | 0.7s | 0.7s | ${\color{green}\textsf{0.4s}}$ | ${\color{green}\textsf{0.4s}}$ |
+| express | cold | no | 1.3s | ${\color{green}\textsf{0.2s}}$ | 1.3s | 0.6s |
+|  | cold | yes | 0.5s | ${\color{green}\textsf{0.2s}}$ | 1.2s | 0.4s |
+|  | warm | no | 0.5s | ${\color{green}\textsf{0.0s}}$ | 0.8s | 0.6s |
+|  | warm | yes | 0.3s | ${\color{green}\textsf{0.0s}}$ | 0.5s | 0.4s |
+| jest | cold | no | 9.1s | ${\color{green}\textsf{0.8s}}$ | 4.4s | 22.5s |
+|  | cold | yes | 2.2s | ${\color{green}\textsf{0.6s}}$ | 2.9s | 21.5s |
+|  | warm | no | 2.7s | ${\color{green}\textsf{0.2s}}$ | 2.2s | 21.6s |
+|  | warm | yes | 1.4s | ${\color{green}\textsf{0.1s}}$ | 1.6s | 20.7s |
+| next | cold | no | 10.8s | ${\color{green}\textsf{1.2s}}$ | 7.4s | 2.4s |
+|  | cold | yes | 7.2s | ${\color{green}\textsf{1.2s}}$ | 5.9s | 1.4s |
+|  | warm | no | 7.6s | ${\color{green}\textsf{0.2s}}$ | 3.5s | 2.4s |
+|  | warm | yes | 6.4s | ${\color{green}\textsf{0.2s}}$ | 3.0s | 1.5s |
+| react | cold | no | 1.1s | ${\color{green}\textsf{0.2s}}$ | 0.9s | 0.7s |
+|  | cold | yes | 0.5s | ${\color{green}\textsf{0.3s}}$ | 0.5s | ${\color{green}\textsf{0.3s}}$ |
+|  | warm | no | 0.6s | ${\color{green}\textsf{0.0s}}$ | 0.3s | 0.7s |
+|  | warm | yes | 0.4s | ${\color{green}\textsf{0.0s}}$ | 0.3s | 0.3s |
+| vite | cold | no | 5.4s | ${\color{green}\textsf{0.2s}}$ | 3.0s | 0.8s |
+|  | cold | yes | 0.9s | ${\color{green}\textsf{0.3s}}$ | 1.2s | 0.4s |
+|  | warm | no | 1.6s | ${\color{green}\textsf{0.1s}}$ | 0.7s | 0.8s |
+|  | warm | yes | 0.6s | ${\color{green}\textsf{0.0s}}$ | 0.5s | 0.4s |
 
-Last run: [2026-09-01 05:28:49 UTC](https://github.com/depjs/canary/actions/runs/33473259267)
+Last run: [2026-09-05 18:33:03 UTC](https://github.com/depjs/canary/actions/runs/33984000777)
 
 <!-- results:end -->
 
